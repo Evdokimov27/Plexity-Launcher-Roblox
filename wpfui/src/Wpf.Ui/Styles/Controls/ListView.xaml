@@ -1,0 +1,146 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Карточка Supporter -->
+    <DataTemplate x:Key="SupporterItemTemplate">
+        <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Аватар -->
+            <Border Grid.RowSpan="2" Width="36" Height="36" CornerRadius="18"
+                    Background="{DynamicResource ControlFillColorDefault}"
+                    VerticalAlignment="Center">
+                <Image Source="{Binding Image}" Stretch="UniformToFill" />
+            </Border>
+
+            <!-- Ник -->
+            <TextBlock Grid.Column="1" Text="{Binding Name}"
+                       FontSize="14" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimary}"/>
+
+            <!-- Ссылка под ником -->
+            <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,2,0,0">
+                <Hyperlink NavigateUri="{Binding Link}">
+                    <Run Text="{Binding LinkText, FallbackValue=Открыть ссылку}"/>
+                </Hyperlink>
+            </TextBlock>
+        </Grid>
+    </DataTemplate>  
+
+
+    <!-- ====== ваши стили как были ====== -->
+    <Style x:Key="UiListViewItem" TargetType="{x:Type ListViewItem}">
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border x:Name="Border" Margin="0" Padding="4"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="1" CornerRadius="4">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Opacity="0.0"
+                                             Color="{DynamicResource SystemAccentColorSecondary}" />
+                        </Border.BorderBrush>
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Border"
+                                                         Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
+                                                         From="0.0" To="1.0" Duration="0:0:.16" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Border"
+                                                         Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Opacity)"
+                                                         From="1.0" To="0.0" Duration="0:0:.16" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="UiListView" TargetType="{x:Type ListView}">
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+        <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Standard" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <!-- ПРИМЕНЯЕМ наш шаблон -->
+        <Setter Property="ItemTemplate" Value="{StaticResource SupporterItemTemplate}" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel
+                        IsVirtualizing="{TemplateBinding VirtualizingPanel.IsVirtualizing}"
+                        VirtualizationMode="{TemplateBinding VirtualizingPanel.VirtualizationMode}" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <Grid>
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      CanContentScroll="{TemplateBinding ScrollViewer.CanContentScroll}"
+                                      HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                      VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                        <Rectangle x:Name="PART_DisabledVisual" Opacity="0" RadiusX="2" RadiusY="2"
+                                   Stretch="Fill" Stroke="Transparent" StrokeThickness="0"
+                                   Visibility="Collapsed">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsGrouping" Value="True">
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="PART_DisabledVisual" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource UiListViewItem}" TargetType="{x:Type ListViewItem}" />
+    <Style BasedOn="{StaticResource UiListView}" TargetType="{x:Type ListView}" />
+</ResourceDictionary>
