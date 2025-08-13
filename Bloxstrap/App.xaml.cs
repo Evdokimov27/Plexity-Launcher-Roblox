@@ -24,7 +24,7 @@ namespace Plexity
         public const string ProjectName = "Plexity";
 #endif
         public const string ProjectOwner = "Plexity";
-        public const string ProjectRepository = "/Plexity/Plexity/";
+        public const string ProjectRepository = "Evdokimov27/Plexity-Launcher-Roblox";
         public const string ProjectDownloadLink = "https://github.com/Plexity/Plexity/releases";
         public const string ProjectHelpLink = "https://github.com/BloxstrapLabs/Bloxstrap/wiki";
         public const string ProjectSupportLink = "https://github.com/Plexity/Plexity/issues/new";
@@ -147,10 +147,9 @@ namespace Plexity
         {
             const string LOG_IDENT = "App::GetLatestRelease";
 
-            try
-            {
+			try
+			{
                 var releaseInfo = await Http.GetJson<GithubRelease>($"https://api.github.com/repos/{ProjectRepository}/releases/latest");
-
                 if (releaseInfo is null || releaseInfo.Assets is null)
                 {
                     Logger.WriteLine(LOG_IDENT, "Encountered invalid data");
@@ -162,9 +161,9 @@ namespace Plexity
             catch (Exception ex)
             {
                 Logger.WriteException(LOG_IDENT, ex);
-            }
+			}
 
-            return null;
+			return null;
         }
         public static void SendStat(string key, string value)
         {
@@ -216,21 +215,28 @@ namespace Plexity
                 });
             }
         }
-
-        protected override void OnStartup(StartupEventArgs e)
+		async void CheckVers()
+		{
+			string currentVersion = Version.TrimStart('V', 'v');
+			var latestVersion = await GetLatestRelease();
+            MessageBox.Show(currentVersion + "   " +  latestVersion.TagName.ToString().TrimStart('V', 'v'));
+		}
+		protected override void OnStartup(StartupEventArgs e)
         {
             const string LOG_IDENT = "App::OnStartup";
 
-            Locale.Initialize();
-            base.OnStartup(e);
+			Locale.Initialize();
+
+			base.OnStartup(e);
 
 
 
-        Logger.WriteLine(LOG_IDENT, $"Starting {ProjectName} v{Version}");
+			Logger.WriteLine(LOG_IDENT, $"Starting {ProjectName} v{Version}");
 
             string userAgent = $"{ProjectName}/{Version}";
+			CheckVers();
 
-            if (IsActionBuild)
+			if (IsActionBuild)
             {
                 Logger.WriteLine(LOG_IDENT, $"Compiled {BuildMetadata.Timestamp.ToFriendlyString()} from commit {BuildMetadata.CommitHash} ({BuildMetadata.CommitRef})");
 

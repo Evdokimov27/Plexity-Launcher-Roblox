@@ -705,10 +705,10 @@ namespace Plexity
                     App.Logger.WriteLine(LOG_IDENT, "No assets found in the release information.");
                     return false;
                 }
-
                 string downloadLocation = Path.Combine(Paths.TempUpdates, asset.Name);
+				System.Windows.MessageBox.Show("Обнова");
 
-                Directory.CreateDirectory(Paths.TempUpdates);
+				Directory.CreateDirectory(Paths.TempUpdates);
 
                 App.Logger.WriteLine(LOG_IDENT, $"Downloading {releaseInfo.TagName}...");
 

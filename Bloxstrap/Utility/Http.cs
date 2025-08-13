@@ -1,4 +1,6 @@
-﻿namespace Plexity.Utility
+﻿using System.Net.Http.Headers;
+
+namespace Plexity.Utility
 {
     internal static class Http
     {
@@ -11,13 +13,28 @@
         /// <exception cref="JsonException"></exception>
         public static async Task<T> GetJson<T>(string url)
         {
-            var request = await App.HttpClient.GetAsync(url);
+			using var client = new HttpClient();
 
-            request.EnsureSuccessStatusCode();
+			// Обязательный заголовок для GitHub API
+			client.DefaultRequestHeaders.UserAgent.Add(
+				new ProductInfoHeaderValue("PlexityApp", "1.0"));
+			client.DefaultRequestHeaders.Accept.Add(
+				new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
 
-            string json = await request.Content.ReadAsStringAsync();
-            
-            return JsonSerializer.Deserialize<T>(json)!;
-        }
+			// Если нужен токен (приватный репо или больше лимит)
+			var token = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
+			if (!string.IsNullOrWhiteSpace(token))
+			{
+				client.DefaultRequestHeaders.Authorization =
+					new AuthenticationHeaderValue("Bearer", token);
+			}
+
+			var resp = await client.GetAsync(url);
+			resp.EnsureSuccessStatusCode();
+
+			var json = await resp.Content.ReadAsStringAsync();
+			return JsonSerializer.Deserialize<T>(json,
+				new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+		}
     }
 }
