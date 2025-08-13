@@ -15,19 +15,10 @@ namespace Plexity.Utility
         {
 			using var client = new HttpClient();
 
-			// Обязательный заголовок для GitHub API
 			client.DefaultRequestHeaders.UserAgent.Add(
 				new ProductInfoHeaderValue("PlexityApp", "1.0"));
 			client.DefaultRequestHeaders.Accept.Add(
 				new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
-
-			// Если нужен токен (приватный репо или больше лимит)
-			var token = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
-			if (!string.IsNullOrWhiteSpace(token))
-			{
-				client.DefaultRequestHeaders.Authorization =
-					new AuthenticationHeaderValue("Bearer", token);
-			}
 
 			var resp = await client.GetAsync(url);
 			resp.EnsureSuccessStatusCode();

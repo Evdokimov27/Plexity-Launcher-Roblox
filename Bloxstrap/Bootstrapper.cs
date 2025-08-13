@@ -157,9 +157,8 @@ namespace Plexity
             const string LOG_IDENT = "Bootstrapper::Run";
 
             App.Logger.WriteLine(LOG_IDENT, "Running bootstrapper");
-
-            // this is now always enabled as of v1.0.3.6
-            if (Dialog is not null)
+			// this is now always enabled as of v1.0.3.6
+			if (Dialog is not null)
                 Dialog.CancelEnabled = true;
 
             SetStatus(Strings.Bootstrapper_Status_Connecting);
@@ -171,7 +170,6 @@ namespace Plexity
             if (connectionResult is not null)
                 HandleConnectionError(connectionResult);
 
-#if (!DEBUG || DEBUG_UPDATER) && !QA_BUILD
             if (App.Settings.Prop.CheckForUpdates && !App.LaunchSettings.UpgradeFlag.Active)
             {
                 bool updatePresent = await CheckForUpdates();
@@ -179,7 +177,6 @@ namespace Plexity
                 if (updatePresent)
                     return;
             }
-#endif
             bool mutexExists = false;
 
             try
@@ -643,7 +640,7 @@ namespace Plexity
         #endregion
 
         #region App Install
-        private async Task<bool> CheckForUpdates()
+        public async Task<bool> CheckForUpdates()
         {
             const string LOG_IDENT = "Bootstrapper::CheckForUpdates";
 
@@ -670,7 +667,6 @@ namespace Plexity
 			string latestVersion = releaseInfo.TagName.TrimStart('V', 'v');
 
 			var versionComparison = Utilities.CompareVersions(currentVersion, latestVersion);
-
 			// Skip update if current version is equal or newer
 			if (App.IsProductionBuild &&
 				(versionComparison == VersionComparison.Equal || versionComparison == VersionComparison.GreaterThan))
@@ -683,7 +679,6 @@ namespace Plexity
 				Dialog.CancelEnabled = false;
 
 			string version = releaseInfo.TagName;
-
 #else
     string version = App.Version;
 #endif
@@ -706,7 +701,6 @@ namespace Plexity
                     return false;
                 }
                 string downloadLocation = Path.Combine(Paths.TempUpdates, asset.Name);
-				System.Windows.MessageBox.Show("Обнова");
 
 				Directory.CreateDirectory(Paths.TempUpdates);
 
@@ -756,7 +750,6 @@ namespace Plexity
             {
                 App.Logger.WriteLine(LOG_IDENT, "An exception occurred when running the auto-updater");
                 App.Logger.WriteException(LOG_IDENT, ex);
-
                 Frontend.ShowMessageBox(
                     string.Format(Strings.Bootstrapper_AutoUpdateFailed, version),
                     MessageBoxImage.Information

@@ -381,7 +381,6 @@ namespace Plexity
                 || Paths.Process.StartsWith(Path.Combine(Paths.Base, "Updates"))
                 || Paths.Process.StartsWith(Path.Combine(Paths.LocalAppData, "Temp"))
                 || Paths.Process.StartsWith(Paths.TempUpdates);
-
             var existingVer = FileVersionInfo.GetVersionInfo(Paths.Application).ProductVersion;
             var currentVer = FileVersionInfo.GetVersionInfo(Paths.Process).ProductVersion;
 

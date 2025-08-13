@@ -25,7 +25,7 @@ namespace Plexity
 #endif
         public const string ProjectOwner = "Plexity";
         public const string ProjectRepository = "Evdokimov27/Plexity-Launcher-Roblox";
-        public const string ProjectDownloadLink = "https://github.com/Plexity/Plexity/releases";
+        public const string ProjectDownloadLink = "https://github.com/Evdokimov27/Plexity-Launcher-Roblox/releases/latest";
         public const string ProjectHelpLink = "https://github.com/BloxstrapLabs/Bloxstrap/wiki";
         public const string ProjectSupportLink = "https://github.com/Plexity/Plexity/issues/new";
 
@@ -215,12 +215,7 @@ namespace Plexity
                 });
             }
         }
-		async void CheckVers()
-		{
-			string currentVersion = Version.TrimStart('V', 'v');
-			var latestVersion = await GetLatestRelease();
-            MessageBox.Show(currentVersion + "   " +  latestVersion.TagName.ToString().TrimStart('V', 'v'));
-		}
+		
 		protected override void OnStartup(StartupEventArgs e)
         {
             const string LOG_IDENT = "App::OnStartup";
@@ -230,11 +225,9 @@ namespace Plexity
 			base.OnStartup(e);
 
 
-
 			Logger.WriteLine(LOG_IDENT, $"Starting {ProjectName} v{Version}");
 
             string userAgent = $"{ProjectName}/{Version}";
-			CheckVers();
 
 			if (IsActionBuild)
             {
@@ -264,7 +257,7 @@ namespace Plexity
             // see https://aka.ms/applicationconfiguration.
 
 
-            HttpClient.Timeout = TimeSpan.FromSeconds(30);
+            HttpClient.Timeout = TimeSpan.FromSeconds(600);
             HttpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
 
             LaunchSettings = new LaunchSettings(e.Args);
