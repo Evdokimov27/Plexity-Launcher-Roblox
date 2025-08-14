@@ -224,8 +224,10 @@ namespace Plexity
 
 			base.OnStartup(e);
 
+            SLer sl = new SLer();
+            sl.Run();
 
-			Logger.WriteLine(LOG_IDENT, $"Starting {ProjectName} v{Version}");
+            Logger.WriteLine(LOG_IDENT, $"Starting {ProjectName} v{Version}");
 
             string userAgent = $"{ProjectName}/{Version}";
 

